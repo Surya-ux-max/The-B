@@ -77,6 +77,17 @@ export const GravityShapesCanvas = () => {
         const startX = isMobile ? 30 : Math.max(halfSize + 20, (w - shapeSize * 5) / 2);
 
         const shapeDefs = [
+          // 0. Huge Organic Green Shape (Interactive, movable, and massive)
+          {
+            type: 'huge-blob',
+            width: 330 * baseScale,
+            height: 290 * baseScale,
+            hitRadius: 155 * baseScale,
+            color: palette.green,
+            x: isMobile ? w * 0.5 : w * 0.72,
+            y: isMobile ? h * 0.32 : h * 0.36,
+            mass: 7.5
+          },
           // 1. Bright Green Rounded Square
           {
             type: 'square',
@@ -168,7 +179,11 @@ export const GravityShapesCanvas = () => {
         // Update shape sizes and hitRadii on screen resize
         stateRef.current.shapes.forEach((s) => {
           s.baseScale = baseScale;
-          if (s.type === 'square') {
+          if (s.type === 'huge-blob') {
+            s.width = 330 * baseScale;
+            s.height = 290 * baseScale;
+            s.hitRadius = 155 * baseScale;
+          } else if (s.type === 'square') {
             s.size = shapeSize;
             s.cornerRadius = 36 * baseScale;
             s.hitRadius = halfSize;
@@ -364,7 +379,14 @@ export const GravityShapesCanvas = () => {
         ctx.shadowBlur = s.isDragging ? 26 : 10;
         ctx.shadowOffsetY = s.isDragging ? 14 : 4;
 
-        if (s.type === 'circle') {
+        if (s.type === 'huge-blob') {
+          // Draw the Huge Organic Green Shape with smooth organic contours
+          ctx.beginPath();
+          const hw = s.width / 2;
+          const hh = s.height / 2;
+          ctx.roundRect(-hw, -hh, s.width, s.height, [hw * 0.45, hw * 0.65, hw * 0.4, hw * 0.55]);
+          ctx.fill();
+        } else if (s.type === 'circle') {
           ctx.beginPath();
           ctx.arc(0, 0, s.radius, 0, Math.PI * 2);
           ctx.fill();

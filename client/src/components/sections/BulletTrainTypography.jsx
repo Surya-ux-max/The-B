@@ -3,13 +3,11 @@ import { motion } from 'framer-motion';
 
 /**
  * BulletTrainTypography
- * Clean, high-impact responsive typography for:
- * "Tarunika B - Full stack Developer"
- *
- * Loops a high-speed bullet train kinetic rush every 5 seconds:
- * - Fluid typography scaling seamlessly across any mobile, tablet, or desktop screen
- * - No horizontal line strips or artifacts
- * - Clean, distraction-free Google typography
+ * Styled after the Google Labs reference composition:
+ * - Massive, bold typography: "Tarunika B - Full stack Developer"
+ * - Huge organic green shape positioned in the background behind the text
+ * - Vivid magenta accent color on the overlapping keyword, exactly matching the reference
+ * - Repeating 5-second bullet train kinetic animation
  */
 export const BulletTrainTypography = () => {
   const [trainCycle, setTrainCycle] = useState(0);
@@ -24,9 +22,9 @@ export const BulletTrainTypography = () => {
   }, []);
 
   return (
-    <div className="relative z-20 flex flex-col items-center justify-center text-center px-4 sm:px-6 select-none pointer-events-none w-full max-w-7xl mx-auto">
-      {/* Primary Headline: Tarunika B */}
-      <div className="overflow-visible relative py-1 sm:py-2 w-full">
+    <div className="relative z-20 flex flex-col items-center justify-center text-center px-4 sm:px-8 select-none pointer-events-none w-full max-w-full mx-auto">
+      {/* Primary Headline: Tarunika B — Massive edge-to-edge typography */}
+      <div className="overflow-visible relative py-1 sm:py-2 w-full flex items-center justify-center">
         <motion.h1
           key={`name-${trainCycle}`}
           initial={{
@@ -47,14 +45,14 @@ export const BulletTrainTypography = () => {
             duration: 0.75,
             ease: [0.16, 1, 0.3, 1]
           }}
-          className="font-display font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13.5rem] 2xl:text-[16rem] tracking-tighter text-[#111318] leading-[0.88] drop-shadow-xs"
+          className="font-display font-black text-[16vw] sm:text-[15.5vw] md:text-[15vw] lg:text-[14.5vw] xl:text-[14vw] tracking-tighter text-[#111318] leading-[0.86] whitespace-nowrap drop-shadow-xs"
         >
           Tarunika B
         </motion.h1>
       </div>
 
-      {/* Sub-headline: Full stack Developer */}
-      <div className="overflow-visible relative mt-3 sm:mt-6 w-full">
+      {/* Sub-headline: Full stack Developer with reference-inspired magenta accent */}
+      <div className="overflow-visible relative mt-2 sm:mt-5 w-full">
         <motion.div
           key={`role-${trainCycle}`}
           initial={{
@@ -76,12 +74,12 @@ export const BulletTrainTypography = () => {
             delay: 0.04,
             ease: [0.16, 1, 0.3, 1]
           }}
-          className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 font-display font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-[6.5rem] tracking-tight leading-none"
+          className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 md:gap-6 font-display font-black text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-[6.5rem] tracking-tight leading-none"
         >
           <span className="text-[#111318]">Full stack</span>
-          <span className="relative inline-block text-[#5490F8]">
+          <span className="relative inline-block text-[#C2185B] drop-shadow-xs">
             Developer
-            <span className="absolute -bottom-1.5 left-0 right-0 h-2 sm:h-3 bg-[#5490F8]/20 rounded-full" />
+            <span className="absolute -bottom-1.5 left-0 right-0 h-2 sm:h-3 bg-[#C2185B]/20 rounded-full" />
           </span>
         </motion.div>
       </div>
