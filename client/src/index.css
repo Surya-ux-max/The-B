@@ -41,7 +41,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, .hero-headline {
+h1,
+.hero-headline {
   font-family: var(--font-display);
   font-size: var(--size-hero);
   font-weight: var(--weight-bold);
@@ -50,7 +51,8 @@ h1, .hero-headline {
   color: var(--color-text);
 }
 
-h2, .section-headline {
+h2,
+.section-headline {
   font-family: var(--font-display);
   font-size: var(--size-section);
   font-weight: var(--weight-bold);
