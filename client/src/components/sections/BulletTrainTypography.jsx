@@ -47,14 +47,14 @@ export const BulletTrainTypography = () => {
             duration: 0.75,
             ease: [0.16, 1, 0.3, 1]
           }}
-          className="font-display font-black text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] tracking-tighter text-[#111318] leading-[0.95] drop-shadow-xs"
+          className="font-display font-black text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13.5rem] 2xl:text-[16rem] tracking-tighter text-[#111318] leading-[0.88] drop-shadow-xs"
         >
           Tarunika B
         </motion.h1>
       </div>
 
       {/* Sub-headline: Full stack Developer */}
-      <div className="overflow-visible relative mt-2 sm:mt-4 w-full">
+      <div className="overflow-visible relative mt-3 sm:mt-6 w-full">
         <motion.div
           key={`role-${trainCycle}`}
           initial={{
@@ -76,12 +76,12 @@ export const BulletTrainTypography = () => {
             delay: 0.04,
             ease: [0.16, 1, 0.3, 1]
           }}
-          className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 font-display font-extrabold text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl tracking-tight"
+          className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 font-display font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-[6.5rem] tracking-tight leading-none"
         >
           <span className="text-[#111318]">Full stack</span>
           <span className="relative inline-block text-[#5490F8]">
             Developer
-            <span className="absolute -bottom-1 left-0 right-0 h-1.5 sm:h-2 bg-[#5490F8]/20 rounded-full" />
+            <span className="absolute -bottom-1.5 left-0 right-0 h-2 sm:h-3 bg-[#5490F8]/20 rounded-full" />
           </span>
         </motion.div>
       </div>
