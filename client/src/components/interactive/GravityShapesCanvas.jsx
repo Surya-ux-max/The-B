@@ -2,9 +2,16 @@ import React, { useRef, useEffect } from 'react';
 
 /**
  * GravityShapesCanvas
- * 2D rigid-body physics canvas with object-to-object collision resolution,
- * momentum transfer, impact scattering (dispersion), and interactive drag/fling.
- * Features stylized Bats, Balls, and vibrant geometric objects in eye-catching colors.
+ * Interactive 2D physics canvas featuring the EXACT shapes, sizes, and colors
+ * from the Google Labs reference composition:
+ * 1. Bright Green Rounded Square (150x150)
+ * 2. Bright Green Rounded Hexagon (~150)
+ * 3. Pastel Pink Rounded Square (150x150)
+ * 4. Bright Orange Rounded Hexagon (~155)
+ * 5. Google Blue Solid Circle (152 diameter)
+ * 6. Golden Yellow 4-Petal Clover / Quatrefoil (~156)
+ * 7. Google Blue Solid Circle (156 diameter)
+ * Plus the subtle top outline rings and floor baseline.
  */
 export const GravityShapesCanvas = () => {
   const canvasRef = useRef(null);
@@ -35,145 +42,190 @@ export const GravityShapesCanvas = () => {
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
 
-    // Vibrant eye-catching color palette
-    const colors = {
-      electricBlue: '#2979FF',
-      solarYellow: '#FFD600',
-      neonPink: '#FF1776',
-      emeraldGreen: '#00E676',
-      electricViolet: '#7C4DFF',
-      sunsetOrange: '#FF5722',
-      crimsonRed: '#D50000',
-      warmWood: '#D7A76E',
-      nearBlack: '#111318'
+    // Exact color palette sampled directly from the user's reference image
+    const palette = {
+      green: '#32D77D',
+      orange: '#FF7E36',
+      pink: '#F9B7F9',
+      blue: '#5490F8',
+      yellow: '#F9BD38',
+      line: '#D7D1C7'
     };
 
-    // Initialize shapes: Bats, Balls, and Geometric items
+    // Calculate responsive base scale (around 150-160px on desktop)
+    const baseScale = Math.min(Math.max(width / 1200, 0.72), 1.05);
+
+    // Initial positions modeled directly after the user's reference layout
+    const floorBaseline = height * 0.88;
+    const shapeSize = 150 * baseScale;
+    const halfSize = shapeSize / 2;
+
     const shapeDefs = [
-      // 1. Cricket/Baseball Bat (draggable & swingable!)
-      {
-        type: 'bat',
-        width: 30,
-        height: 140,
-        radius: 46, // collision hit radius
-        color: colors.warmWood,
-        accentColor: colors.electricBlue,
-        x: width * 0.22,
-        y: height * 0.45,
-        mass: 3.5,
-        restitution: 0.92
-      },
-      // 2. Red Cricket Ball with white seams
-      {
-        type: 'ball',
-        radius: 28,
-        color: colors.crimsonRed,
-        seamColor: '#FFFFFF',
-        x: width * 0.32,
-        y: height * 0.3,
-        mass: 1.2,
-        restitution: 0.88
-      },
-      // 3. Tennis / Neon Green Ball
-      {
-        type: 'ball',
-        radius: 25,
-        color: colors.emeraldGreen,
-        seamColor: '#FFFFFF',
-        x: width * 0.45,
-        y: height * 0.2,
-        mass: 1.0,
-        restitution: 0.9
-      },
-      // 4. Electric Blue Sports Ball
-      {
-        type: 'ball',
-        radius: 34,
-        color: colors.electricBlue,
-        seamColor: '#FFD600',
-        x: width * 0.65,
-        y: height * 0.35,
-        mass: 1.5,
-        restitution: 0.85
-      },
-      // 5. Solar Yellow Pill
-      {
-        type: 'pill',
-        width: 100,
-        height: 44,
-        radius: 38,
-        color: colors.solarYellow,
-        x: width * 0.78,
-        y: height * 0.28,
-        mass: 2.0,
-        restitution: 0.8
-      },
-      // 6. Neon Pink Rounded Square
+      // 1. Bottom Left: Bright Green Rounded Square
       {
         type: 'square',
-        size: 64,
-        radius: 34,
-        color: colors.neonPink,
-        x: width * 0.15,
-        y: height * 0.65,
-        mass: 2.2,
-        restitution: 0.78
+        size: shapeSize,
+        cornerRadius: 36 * baseScale,
+        hitRadius: halfSize,
+        color: palette.green,
+        x: Math.max(halfSize + 20, width * 0.14),
+        y: floorBaseline - halfSize,
+        mass: 3.2
       },
-      // 7. Electric Violet Hollow Ring
+      // 2. Top Left: Bright Green Rounded Hexagon
       {
-        type: 'ring',
-        radius: 38,
-        strokeWidth: 9,
-        color: colors.electricViolet,
-        x: width * 0.84,
-        y: height * 0.62,
-        mass: 1.8,
-        restitution: 0.82
+        type: 'hexagon',
+        radius: 76 * baseScale,
+        cornerRadius: 22 * baseScale,
+        hitRadius: 76 * baseScale,
+        color: palette.green,
+        x: Math.max(halfSize + 20, width * 0.14),
+        y: floorBaseline - shapeSize - (76 * baseScale) - 6,
+        mass: 2.8
       },
-      // 8. Sunset Orange Star / Polygon
+      // 3. Bottom Second: Pastel Pink Rounded Square
       {
-        type: 'star',
-        radius: 32,
-        color: colors.sunsetOrange,
-        x: width * 0.38,
-        y: height * 0.72,
-        mass: 1.4,
-        restitution: 0.84
+        type: 'square',
+        size: shapeSize,
+        cornerRadius: 38 * baseScale,
+        hitRadius: halfSize,
+        color: palette.pink,
+        x: Math.max(halfSize + 20, width * 0.14) + shapeSize + 8,
+        y: floorBaseline - halfSize,
+        mass: 3.2
       },
-      // 9. Extra bouncy small ball
+      // 4. Top Middle: Bright Orange Rounded Hexagon
       {
-        type: 'ball',
-        radius: 20,
-        color: colors.neonPink,
-        seamColor: '#FFFFFF',
-        x: width * 0.55,
-        y: height * 0.6,
-        mass: 0.8,
-        restitution: 0.95
+        type: 'hexagon',
+        radius: 78 * baseScale,
+        cornerRadius: 24 * baseScale,
+        hitRadius: 78 * baseScale,
+        color: palette.orange,
+        x: Math.max(halfSize + 20, width * 0.14) + shapeSize * 0.88,
+        y: floorBaseline - shapeSize - (78 * baseScale) - 10,
+        mass: 2.9
+      },
+      // 5. Bottom Third: Google Blue Solid Circle
+      {
+        type: 'circle',
+        radius: 76 * baseScale,
+        hitRadius: 76 * baseScale,
+        color: palette.blue,
+        x: Math.max(halfSize + 20, width * 0.14) + shapeSize * 2 + 18,
+        y: floorBaseline - (76 * baseScale),
+        mass: 3.0
+      },
+      // 6. Bottom Fourth: Golden Yellow 4-Petal Clover
+      {
+        type: 'clover',
+        size: 156 * baseScale,
+        hitRadius: 78 * baseScale,
+        color: palette.yellow,
+        x: Math.max(halfSize + 20, width * 0.14) + shapeSize * 3 + 26,
+        y: floorBaseline - (78 * baseScale),
+        mass: 3.1
+      },
+      // 7. Far Right: Google Blue Solid Circle
+      {
+        type: 'circle',
+        radius: 78 * baseScale,
+        hitRadius: 78 * baseScale,
+        color: palette.blue,
+        x: Math.max(halfSize + 20, width * 0.14) + shapeSize * 4 + 40,
+        y: floorBaseline - (78 * baseScale) - 40,
+        mass: 3.0
       }
     ];
 
     stateRef.current.shapes = shapeDefs.map((def, idx) => ({
       ...def,
       id: idx,
-      vx: (Math.random() - 0.5) * 4,
-      vy: Math.random() * 3,
-      angle: (Math.random() - 0.5) * 0.8,
-      vAngle: (Math.random() - 0.5) * 0.04,
-      isDragging: false
+      vx: 0,
+      vy: 0,
+      angle: 0,
+      vAngle: 0,
+      isDragging: false,
+      restitution: 0.8
     }));
 
-    const gravity = 0.35;
-    const airFriction = 0.988;
-    const wallBounce = 0.75;
+    const gravity = 0.38;
+    const friction = 0.985;
+    const floorBounce = 0.68;
 
-    // Main physics simulation & render loop
+    // Helper: Draw rounded hexagon
+    const drawRoundedHexagon = (c, r, cr) => {
+      const sides = 6;
+      const angle = (Math.PI * 2) / sides;
+      const vertices = [];
+      for (let i = 0; i < sides; i++) {
+        const a = i * angle - Math.PI / 2;
+        vertices.push({ x: Math.cos(a) * r, y: Math.sin(a) * r });
+      }
+      c.beginPath();
+      for (let i = 0; i < sides; i++) {
+        const current = vertices[i];
+        const next = vertices[(i + 1) % sides];
+        const prev = vertices[(i - 1 + sides) % sides];
+
+        const v1 = { x: prev.x - current.x, y: prev.y - current.y };
+        const v2 = { x: next.x - current.x, y: next.y - current.y };
+        const len1 = Math.hypot(v1.x, v1.y);
+        const len2 = Math.hypot(v2.x, v2.y);
+
+        const p1 = { x: current.x + (v1.x / len1) * cr, y: current.y + (v1.y / len1) * cr };
+        const p2 = { x: current.x + (v2.x / len2) * cr, y: current.y + (v2.y / len2) * cr };
+
+        if (i === 0) c.moveTo(p1.x, p1.y);
+        else c.lineTo(p1.x, p1.y);
+        c.quadraticCurveTo(current.x, current.y, p2.x, p2.y);
+      }
+      c.closePath();
+      c.fill();
+    };
+
+    // Helper: Draw 4-Petal Clover / Quatrefoil
+    const drawClover = (c, s) => {
+      const r = s * 0.3;
+      const d = s * 0.24;
+      c.beginPath();
+      c.arc(0, -d, r, 0, Math.PI * 2);
+      c.arc(d, 0, r, 0, Math.PI * 2);
+      c.arc(0, d, r, 0, Math.PI * 2);
+      c.arc(-d, 0, r, 0, Math.PI * 2);
+      c.roundRect(-d, -d, d * 2, d * 2, 16 * baseScale);
+      c.fill();
+    };
+
+    // Simulation loop
     const animate = () => {
       ctx.clearRect(0, 0, width, height);
 
+      // Draw subtle top outline rings (like in the screenshot)
+      ctx.save();
+      ctx.strokeStyle = palette.line;
+      ctx.lineWidth = 1.2;
+      const topRingR = 26 * baseScale;
+      const topCenter = width * 0.49;
+      [-1, 0, 1].forEach((offset) => {
+        ctx.beginPath();
+        ctx.arc(topCenter + offset * (topRingR * 1.8), 24 * baseScale, topRingR, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+      ctx.restore();
+
+      // Draw subtle baseline floor (like in the screenshot)
+      ctx.save();
+      ctx.strokeStyle = palette.line;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(0, floorBaseline);
+      ctx.lineTo(width, floorBaseline);
+      ctx.stroke();
+      ctx.restore();
+
       const shapes = stateRef.current.shapes;
 
-      // 1. Physics update & Wall Collisions
+      // 1. Move & Wall / Floor Bounds
       shapes.forEach((s) => {
         if (!s.isDragging) {
           s.vy += gravity;
@@ -182,41 +234,41 @@ export const GravityShapesCanvas = () => {
           s.y += s.vy;
           s.angle += s.vAngle;
 
-          s.vx *= airFriction;
-          s.vy *= airFriction;
-          s.vAngle *= airFriction;
+          s.vx *= friction;
+          s.vy *= friction;
+          s.vAngle *= friction;
 
-          const r = s.radius;
+          const r = s.hitRadius;
 
-          // Floor
-          if (s.y + r > height) {
-            s.y = height - r;
-            s.vy = -s.vy * wallBounce;
-            s.vx *= 0.94; // floor roll friction
+          // Floor baseline
+          if (s.y + r > floorBaseline) {
+            s.y = floorBaseline - r;
+            s.vy = -s.vy * floorBounce;
+            s.vx *= 0.94;
             if (Math.abs(s.vy) < 0.4) s.vy = 0;
           }
 
           // Ceiling
           if (s.y - r < 0) {
             s.y = r;
-            s.vy = -s.vy * wallBounce;
+            s.vy = -s.vy * floorBounce;
           }
 
           // Left Wall
           if (s.x - r < 0) {
             s.x = r;
-            s.vx = -s.vx * wallBounce;
+            s.vx = -s.vx * floorBounce;
           }
 
           // Right Wall
           if (s.x + r > width) {
             s.x = width - r;
-            s.vx = -s.vx * wallBounce;
+            s.vx = -s.vx * floorBounce;
           }
         }
       });
 
-      // 2. Object-to-Object Collisions & Momentum Dispersion
+      // 2. Object-to-Object Collisions & Dispersion
       for (let i = 0; i < shapes.length; i++) {
         for (let j = i + 1; j < shapes.length; j++) {
           const s1 = shapes[i];
@@ -225,14 +277,12 @@ export const GravityShapesCanvas = () => {
           const dx = s2.x - s1.x;
           const dy = s2.y - s1.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          const minDist = s1.radius + s2.radius;
+          const minDist = s1.hitRadius + s2.hitRadius;
 
           if (dist < minDist && dist > 0.001) {
-            // Collision normal
             const nx = dx / dist;
             const ny = dy / dist;
 
-            // Separate overlapping objects so they don't stick
             const overlap = minDist - dist;
             const totalMass = s1.mass + s2.mass;
 
@@ -249,19 +299,15 @@ export const GravityShapesCanvas = () => {
               s1.y -= ny * overlap;
             }
 
-            // Relative velocity
             const vRelX = s2.vx - s1.vx;
             const vRelY = s2.vy - s1.vy;
             const velAlongNormal = vRelX * nx + vRelY * ny;
 
-            // Only collide if moving towards each other
             if (velAlongNormal < 0) {
-              const restitution = Math.max(s1.restitution, s2.restitution);
-              const impulseMag = -(1 + restitution) * velAlongNormal / (1 / s1.mass + 1 / s2.mass);
-
-              // Extra dispersion kick on high impact (e.g. bat hit)
-              const dispersionMultiplier = (s1.type === 'bat' || s2.type === 'bat') ? 1.45 : 1.1;
-              const finalImpulse = impulseMag * dispersionMultiplier;
+              const restitution = 0.82;
+              const impulse = -(1 + restitution) * velAlongNormal / (1 / s1.mass + 1 / s2.mass);
+              const dispersionMultiplier = 1.2;
+              const finalImpulse = impulse * dispersionMultiplier;
 
               const ix = finalImpulse * nx;
               const iy = finalImpulse * ny;
@@ -269,132 +315,42 @@ export const GravityShapesCanvas = () => {
               if (!s1.isDragging) {
                 s1.vx -= ix / s1.mass;
                 s1.vy -= iy / s1.mass;
-                s1.vAngle -= (nx * vRelY - ny * vRelX) * 0.01;
+                s1.vAngle -= (nx * vRelY - ny * vRelX) * 0.012;
               }
 
               if (!s2.isDragging) {
                 s2.vx += ix / s2.mass;
                 s2.vy += iy / s2.mass;
-                s2.vAngle += (nx * vRelY - ny * vRelX) * 0.01;
+                s2.vAngle += (nx * vRelY - ny * vRelX) * 0.012;
               }
             }
           }
         }
       }
 
-      // 3. Render all shapes with shadows and eye-catching styling
+      // 3. Render exact shapes
       shapes.forEach((s) => {
         ctx.save();
         ctx.translate(s.x, s.y);
         ctx.rotate(s.angle);
 
-        // Soft drop shadow
-        ctx.shadowColor = 'rgba(17, 19, 24, 0.12)';
-        ctx.shadowBlur = s.isDragging ? 26 : 14;
-        ctx.shadowOffsetY = s.isDragging ? 16 : 8;
+        ctx.fillStyle = s.color;
+        ctx.shadowColor = 'rgba(17, 19, 24, 0.08)';
+        ctx.shadowBlur = s.isDragging ? 26 : 10;
+        ctx.shadowOffsetY = s.isDragging ? 14 : 4;
 
-        if (s.type === 'bat') {
-          // Render Cricket/Baseball Bat
-          // Handle
-          ctx.fillStyle = '#111318';
-          ctx.beginPath();
-          ctx.roundRect(-7, -65, 14, 45, 6);
-          ctx.fill();
-
-          // Grip wrap marks
-          ctx.strokeStyle = '#FFFFFF';
-          ctx.lineWidth = 1.5;
-          for (let gy = -55; gy <= -25; gy += 8) {
-            ctx.beginPath();
-            ctx.moveTo(-6, gy);
-            ctx.lineTo(6, gy + 3);
-            ctx.stroke();
-          }
-
-          // Bat Blade (Main wood paddle with color accent)
-          ctx.fillStyle = s.color;
-          ctx.beginPath();
-          ctx.roundRect(-15, -20, 30, 85, 12);
-          ctx.fill();
-
-          // Center accent stripe
-          ctx.fillStyle = s.accentColor;
-          ctx.beginPath();
-          ctx.roundRect(-5, -12, 10, 70, 4);
-          ctx.fill();
-
-        } else if (s.type === 'ball') {
-          // Render Ball with 3D spherical gradient & seam stitches
-          const radGrad = ctx.createRadialGradient(-s.radius * 0.3, -s.radius * 0.3, 2, 0, 0, s.radius);
-          radGrad.addColorStop(0, '#FFFFFF');
-          radGrad.addColorStop(0.3, s.color);
-          radGrad.addColorStop(1, s.color);
-
-          ctx.fillStyle = radGrad;
+        if (s.type === 'circle') {
           ctx.beginPath();
           ctx.arc(0, 0, s.radius, 0, Math.PI * 2);
           ctx.fill();
-
-          // Ball seam curve
-          ctx.strokeStyle = s.seamColor;
-          ctx.lineWidth = 2;
-          ctx.setLineDash([3, 2]);
-          ctx.beginPath();
-          ctx.arc(s.radius * 0.25, 0, s.radius * 0.85, Math.PI * 0.6, Math.PI * 1.4);
-          ctx.stroke();
-          ctx.setLineDash([]);
-
-        } else if (s.type === 'pill') {
-          // Rounded pill/capsule
-          ctx.fillStyle = s.color;
-          ctx.beginPath();
-          ctx.roundRect(-s.width / 2, -s.height / 2, s.width, s.height, s.height / 2);
-          ctx.fill();
-
-          // Accent ring inside pill
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-          ctx.beginPath();
-          ctx.arc(s.width * 0.22, 0, s.height * 0.28, 0, Math.PI * 2);
-          ctx.fill();
-
         } else if (s.type === 'square') {
-          // Rounded square
-          ctx.fillStyle = s.color;
           ctx.beginPath();
-          ctx.roundRect(-s.size / 2, -s.size / 2, s.size, s.size, 18);
+          ctx.roundRect(-s.size / 2, -s.size / 2, s.size, s.size, s.cornerRadius);
           ctx.fill();
-
-          // Inner cutout detail
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
-          ctx.beginPath();
-          ctx.roundRect(-s.size * 0.25, -s.size * 0.25, s.size * 0.5, s.size * 0.5, 8);
-          ctx.fill();
-
-        } else if (s.type === 'ring') {
-          // Hollow ring
-          ctx.strokeStyle = s.color;
-          ctx.lineWidth = s.strokeWidth;
-          ctx.beginPath();
-          ctx.arc(0, 0, s.radius - s.strokeWidth / 2, 0, Math.PI * 2);
-          ctx.stroke();
-
-        } else if (s.type === 'star') {
-          // Playful 5-point star
-          ctx.fillStyle = s.color;
-          ctx.beginPath();
-          const points = 5;
-          const outerR = s.radius;
-          const innerR = s.radius * 0.5;
-          for (let p = 0; p < points * 2; p++) {
-            const r = p % 2 === 0 ? outerR : innerR;
-            const a = (p * Math.PI) / points - Math.PI / 2;
-            const px = Math.cos(a) * r;
-            const py = Math.sin(a) * r;
-            if (p === 0) ctx.moveTo(px, py);
-            else ctx.lineTo(px, py);
-          }
-          ctx.closePath();
-          ctx.fill();
+        } else if (s.type === 'hexagon') {
+          drawRoundedHexagon(ctx, s.radius, s.cornerRadius);
+        } else if (s.type === 'clover') {
+          drawClover(ctx, s.size);
         }
 
         ctx.restore();
@@ -405,7 +361,7 @@ export const GravityShapesCanvas = () => {
 
     stateRef.current.animationId = requestAnimationFrame(animate);
 
-    // Pointer events for drag, swing & throw
+    // Pointer handlers
     const getPos = (e) => {
       const rect = canvas.getBoundingClientRect();
       const cx = e.touches ? e.touches[0].clientX : e.clientX;
@@ -416,7 +372,7 @@ export const GravityShapesCanvas = () => {
     const isHit = (pos, s) => {
       const dx = pos.x - s.x;
       const dy = pos.y - s.y;
-      return Math.sqrt(dx * dx + dy * dy) <= s.radius + 10;
+      return Math.sqrt(dx * dx + dy * dy) <= s.hitRadius + 6;
     };
 
     const handlePointerDown = (e) => {
@@ -463,9 +419,8 @@ export const GravityShapesCanvas = () => {
       const dragged = stateRef.current.draggedShape;
       if (dragged) {
         dragged.isDragging = false;
-        // Fling with velocity
-        dragged.vx = stateRef.current.mouseVelocity.x * 0.9;
-        dragged.vy = stateRef.current.mouseVelocity.y * 0.9;
+        dragged.vx = stateRef.current.mouseVelocity.x * 0.85;
+        dragged.vy = stateRef.current.mouseVelocity.y * 0.85;
         dragged.vAngle = (stateRef.current.mouseVelocity.x || 0.1) * 0.015;
         stateRef.current.draggedShape = null;
         canvas.style.cursor = 'grab';
