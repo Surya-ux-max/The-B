@@ -77,16 +77,16 @@ export const GravityShapesCanvas = () => {
         const startX = isMobile ? 30 : Math.max(halfSize + 20, (w - shapeSize * 5) / 2);
 
         const shapeDefs = [
-          // 0. Huge Organic Green Shape (Interactive, movable, and massive)
+          // 0. Huge Organic Green Shape (Colossal, interactive, and movable)
           {
             type: 'huge-blob',
-            width: 330 * baseScale,
-            height: 290 * baseScale,
-            hitRadius: 155 * baseScale,
+            width: 580 * baseScale,
+            height: 500 * baseScale,
+            hitRadius: 260 * baseScale,
             color: palette.green,
-            x: isMobile ? w * 0.5 : w * 0.72,
-            y: isMobile ? h * 0.32 : h * 0.36,
-            mass: 7.5
+            x: isMobile ? w * 0.5 : w * 0.74,
+            y: isMobile ? h * 0.38 : h * 0.42,
+            mass: 12.0
           },
           // 1. Bright Green Rounded Square
           {
@@ -180,9 +180,9 @@ export const GravityShapesCanvas = () => {
         stateRef.current.shapes.forEach((s) => {
           s.baseScale = baseScale;
           if (s.type === 'huge-blob') {
-            s.width = 330 * baseScale;
-            s.height = 290 * baseScale;
-            s.hitRadius = 155 * baseScale;
+            s.width = 580 * baseScale;
+            s.height = 500 * baseScale;
+            s.hitRadius = 260 * baseScale;
           } else if (s.type === 'square') {
             s.size = shapeSize;
             s.cornerRadius = 36 * baseScale;
