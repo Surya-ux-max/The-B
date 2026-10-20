@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+:root {
+  /* Colours - User Exact Global Design Tokens */
+  --color-background: #F3EFEA;
+  --color-text: #111318;
+  --color-surface: #FFFFFF;
+  --color-blue: #5B95F9;
+  --color-yellow: #FFCE35;
+  --color-pink: #F6B4F0;
+  --color-green: #34A853;
+  --color-beige: #E8DED2;
+  --color-muted: #77736E;
+
+  /* Typography */
+  --font-display: "Google Sans Display", "Google Sans", "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-body: "Google Sans", "Plus Jakarta Sans", Arial, system-ui, sans-serif;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --size-hero: clamp(2.5rem, 5vw, 4.5rem);
+  --size-section: clamp(1.75rem, 3vw, 3rem);
+  --size-card-title: 0.875rem;
+  --size-body: 0.875rem;
+  --size-label: 0.6875rem;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--size-body);
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, .hero-headline {
+  font-family: var(--font-display);
+  font-size: var(--size-hero);
+  font-weight: var(--weight-bold);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+}
+
+h2, .section-headline {
+  font-family: var(--font-display);
+  font-size: var(--size-section);
+  font-weight: var(--weight-bold);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: var(--size-card-title);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+}
+
+.label-filter {
+  font-family: var(--font-body);
+  font-size: var(--size-label);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Custom interactive pill buttons */
+.pill-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  font-size: var(--size-label);
+  font-weight: var(--weight-medium);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid var(--color-beige);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.pill-button:hover {
+  border-color: var(--color-text);
+  transform: translateY(-1px);
+}
+
+.pill-button.active {
+  background-color: var(--color-text);
+  color: var(--color-surface);
+  border-color: var(--color-text);
+}
+
+/* Google Labs Surface Card */
+.labs-surface {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-beige);
+  border-radius: 1.25rem;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.labs-surface:hover {
+  box-shadow: 0 12px 30px -10px rgba(17, 19, 24, 0.08);
+  border-color: rgba(91, 149, 249, 0.4);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-beige);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-blue);
+}
