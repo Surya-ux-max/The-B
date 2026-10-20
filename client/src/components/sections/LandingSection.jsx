@@ -12,7 +12,7 @@ import BulletTrainTypography from './BulletTrainTypography';
  */
 export const LandingSection = () => {
   return (
-    <section className="relative w-screen h-screen min-h-[600px] overflow-hidden bg-[#F3EFEA] flex items-center justify-center">
+    <section className="relative w-full h-screen min-h-[100dvh] max-w-full overflow-hidden bg-[#F3EFEA] flex items-center justify-center">
       {/* Interactive Movable Google Shapes Canvas with Gravity & Collision Dispersion */}
       <GravityShapesCanvas />
 

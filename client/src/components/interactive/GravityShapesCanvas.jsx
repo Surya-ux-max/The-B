@@ -2,16 +2,18 @@ import React, { useRef, useEffect } from 'react';
 
 /**
  * GravityShapesCanvas
- * Interactive 2D physics canvas featuring the EXACT shapes, sizes, and colors
- * from the Google Labs reference composition:
- * 1. Bright Green Rounded Square (150x150)
- * 2. Bright Green Rounded Hexagon (~150)
- * 3. Pastel Pink Rounded Square (150x150)
- * 4. Bright Orange Rounded Hexagon (~155)
- * 5. Google Blue Solid Circle (152 diameter)
- * 6. Golden Yellow 4-Petal Clover / Quatrefoil (~156)
- * 7. Google Blue Solid Circle (156 diameter)
- * Plus the subtle top outline rings and floor baseline.
+ * Interactive 2D physics canvas featuring the exact Google shapes from the reference:
+ * - Bright Green Rounded Square
+ * - Bright Green Rounded Hexagon
+ * - Pastel Pink Rounded Square
+ * - Bright Orange Rounded Hexagon
+ * - Google Blue Solid Circles
+ * - Golden Yellow 4-Petal Clover
+ *
+ * Fully responsive across all devices (mobile, tablet, desktop) with:
+ * - Dynamic scaling and bounds checking on resize
+ * - Zero extra decorative lines or logos
+ * - Physics momentum, object-to-object collisions, and dispersion
  */
 export const GravityShapesCanvas = () => {
   const canvasRef = useRef(null);
@@ -21,7 +23,9 @@ export const GravityShapesCanvas = () => {
     dragOffset: { x: 0, y: 0 },
     lastMouse: { x: 0, y: 0, time: 0 },
     mouseVelocity: { x: 0, y: 0 },
-    animationId: null
+    animationId: null,
+    width: 0,
+    height: 0
   });
 
   useEffect(() => {
@@ -29,128 +33,168 @@ export const GravityShapesCanvas = () => {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
-    const updateDimensions = () => {
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = canvas.clientWidth * dpr;
-      canvas.height = canvas.clientHeight * dpr;
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
-    };
-
-    updateDimensions();
-
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-
-    // Exact color palette sampled directly from the user's reference image
+    // Sampling colors directly from reference
     const palette = {
       green: '#32D77D',
       orange: '#FF7E36',
       pink: '#F9B7F9',
       blue: '#5490F8',
-      yellow: '#F9BD38',
-      line: '#D7D1C7'
+      yellow: '#F9BD38'
     };
 
-    // Calculate responsive base scale (around 150-160px on desktop)
-    const baseScale = Math.min(Math.max(width / 1200, 0.72), 1.05);
+    const initOrResizeCanvas = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
 
-    // Initial positions modeled directly after the user's reference layout
-    const floorBaseline = height * 0.88;
-    const shapeSize = 150 * baseScale;
-    const halfSize = shapeSize / 2;
+      stateRef.current.width = w;
+      stateRef.current.height = h;
 
-    const shapeDefs = [
-      // 1. Bottom Left: Bright Green Rounded Square
-      {
-        type: 'square',
-        size: shapeSize,
-        cornerRadius: 36 * baseScale,
-        hitRadius: halfSize,
-        color: palette.green,
-        x: Math.max(halfSize + 20, width * 0.14),
-        y: floorBaseline - halfSize,
-        mass: 3.2
-      },
-      // 2. Top Left: Bright Green Rounded Hexagon
-      {
-        type: 'hexagon',
-        radius: 76 * baseScale,
-        cornerRadius: 22 * baseScale,
-        hitRadius: 76 * baseScale,
-        color: palette.green,
-        x: Math.max(halfSize + 20, width * 0.14),
-        y: floorBaseline - shapeSize - (76 * baseScale) - 6,
-        mass: 2.8
-      },
-      // 3. Bottom Second: Pastel Pink Rounded Square
-      {
-        type: 'square',
-        size: shapeSize,
-        cornerRadius: 38 * baseScale,
-        hitRadius: halfSize,
-        color: palette.pink,
-        x: Math.max(halfSize + 20, width * 0.14) + shapeSize + 8,
-        y: floorBaseline - halfSize,
-        mass: 3.2
-      },
-      // 4. Top Middle: Bright Orange Rounded Hexagon
-      {
-        type: 'hexagon',
-        radius: 78 * baseScale,
-        cornerRadius: 24 * baseScale,
-        hitRadius: 78 * baseScale,
-        color: palette.orange,
-        x: Math.max(halfSize + 20, width * 0.14) + shapeSize * 0.88,
-        y: floorBaseline - shapeSize - (78 * baseScale) - 10,
-        mass: 2.9
-      },
-      // 5. Bottom Third: Google Blue Solid Circle
-      {
-        type: 'circle',
-        radius: 76 * baseScale,
-        hitRadius: 76 * baseScale,
-        color: palette.blue,
-        x: Math.max(halfSize + 20, width * 0.14) + shapeSize * 2 + 18,
-        y: floorBaseline - (76 * baseScale),
-        mass: 3.0
-      },
-      // 6. Bottom Fourth: Golden Yellow 4-Petal Clover
-      {
-        type: 'clover',
-        size: 156 * baseScale,
-        hitRadius: 78 * baseScale,
-        color: palette.yellow,
-        x: Math.max(halfSize + 20, width * 0.14) + shapeSize * 3 + 26,
-        y: floorBaseline - (78 * baseScale),
-        mass: 3.1
-      },
-      // 7. Far Right: Google Blue Solid Circle
-      {
-        type: 'circle',
-        radius: 78 * baseScale,
-        hitRadius: 78 * baseScale,
-        color: palette.blue,
-        x: Math.max(halfSize + 20, width * 0.14) + shapeSize * 4 + 40,
-        y: floorBaseline - (78 * baseScale) - 40,
-        mass: 3.0
+      // Responsive scale:
+      // Mobile (<600px): ~0.38 - 0.5 (shape ~55-75px)
+      // Tablet (600-900px): ~0.55 - 0.75 (shape ~85-115px)
+      // Desktop (>900px): ~0.85 - 1.0 (shape ~130-155px)
+      const isMobile = w < 640;
+      const isTablet = w >= 640 && w < 1024;
+      const baseScale = isMobile
+        ? Math.max(w / 700, 0.38)
+        : isTablet
+        ? Math.max(w / 1100, 0.6)
+        : Math.min(Math.max(w / 1350, 0.8), 1.0);
+
+      const shapeSize = 150 * baseScale;
+      const halfSize = shapeSize / 2;
+      const floorBaseline = h * 0.94; // natural ground near bottom
+
+      if (stateRef.current.shapes.length === 0) {
+        // Initialize shapes with positions adapted for screen width
+        const count = 7;
+        const spacing = isMobile ? (w - 40) / count : shapeSize + 12;
+        const startX = isMobile ? 30 : Math.max(halfSize + 20, (w - shapeSize * 5) / 2);
+
+        const shapeDefs = [
+          // 1. Bright Green Rounded Square
+          {
+            type: 'square',
+            size: shapeSize,
+            cornerRadius: 36 * baseScale,
+            hitRadius: halfSize,
+            color: palette.green,
+            x: isMobile ? w * 0.15 : startX,
+            y: floorBaseline - halfSize,
+            mass: 3.2
+          },
+          // 2. Bright Green Rounded Hexagon
+          {
+            type: 'hexagon',
+            radius: 76 * baseScale,
+            cornerRadius: 22 * baseScale,
+            hitRadius: 76 * baseScale,
+            color: palette.green,
+            x: isMobile ? w * 0.18 : startX,
+            y: isMobile ? floorBaseline - halfSize * 2 - 20 : floorBaseline - shapeSize - (76 * baseScale) - 8,
+            mass: 2.8
+          },
+          // 3. Pastel Pink Rounded Square
+          {
+            type: 'square',
+            size: shapeSize,
+            cornerRadius: 38 * baseScale,
+            hitRadius: halfSize,
+            color: palette.pink,
+            x: isMobile ? w * 0.42 : startX + spacing,
+            y: floorBaseline - halfSize,
+            mass: 3.2
+          },
+          // 4. Bright Orange Rounded Hexagon
+          {
+            type: 'hexagon',
+            radius: 78 * baseScale,
+            cornerRadius: 24 * baseScale,
+            hitRadius: 78 * baseScale,
+            color: palette.orange,
+            x: isMobile ? w * 0.45 : startX + spacing * 0.9,
+            y: isMobile ? floorBaseline - halfSize * 2 - 30 : floorBaseline - shapeSize - (78 * baseScale) - 10,
+            mass: 2.9
+          },
+          // 5. Google Blue Solid Circle
+          {
+            type: 'circle',
+            radius: 76 * baseScale,
+            hitRadius: 76 * baseScale,
+            color: palette.blue,
+            x: isMobile ? w * 0.72 : startX + spacing * 2,
+            y: floorBaseline - (76 * baseScale),
+            mass: 3.0
+          },
+          // 6. Golden Yellow 4-Petal Clover
+          {
+            type: 'clover',
+            size: 156 * baseScale,
+            hitRadius: 78 * baseScale,
+            color: palette.yellow,
+            x: isMobile ? w * 0.82 : startX + spacing * 3,
+            y: floorBaseline - (78 * baseScale),
+            mass: 3.1
+          },
+          // 7. Right Google Blue Solid Circle
+          {
+            type: 'circle',
+            radius: 78 * baseScale,
+            hitRadius: 78 * baseScale,
+            color: palette.blue,
+            x: isMobile ? w * 0.9 : startX + spacing * 4,
+            y: isMobile ? floorBaseline - (78 * baseScale) - 40 : floorBaseline - (78 * baseScale) - 30,
+            mass: 3.0
+          }
+        ];
+
+        stateRef.current.shapes = shapeDefs.map((def, idx) => ({
+          ...def,
+          id: idx,
+          baseScale,
+          vx: 0,
+          vy: 0,
+          angle: 0,
+          vAngle: 0,
+          isDragging: false,
+          restitution: 0.82
+        }));
+      } else {
+        // Update shape sizes and hitRadii on screen resize
+        stateRef.current.shapes.forEach((s) => {
+          s.baseScale = baseScale;
+          if (s.type === 'square') {
+            s.size = shapeSize;
+            s.cornerRadius = 36 * baseScale;
+            s.hitRadius = halfSize;
+          } else if (s.type === 'hexagon') {
+            s.radius = 76 * baseScale;
+            s.cornerRadius = 22 * baseScale;
+            s.hitRadius = 76 * baseScale;
+          } else if (s.type === 'circle') {
+            s.radius = 76 * baseScale;
+            s.hitRadius = 76 * baseScale;
+          } else if (s.type === 'clover') {
+            s.size = 156 * baseScale;
+            s.hitRadius = 78 * baseScale;
+          }
+          // Clamp within new screen boundaries
+          s.x = Math.max(s.hitRadius, Math.min(w - s.hitRadius, s.x));
+          s.y = Math.max(s.hitRadius, Math.min(h - s.hitRadius, s.y));
+        });
       }
-    ];
+    };
 
-    stateRef.current.shapes = shapeDefs.map((def, idx) => ({
-      ...def,
-      id: idx,
-      vx: 0,
-      vy: 0,
-      angle: 0,
-      vAngle: 0,
-      isDragging: false,
-      restitution: 0.8
-    }));
+    initOrResizeCanvas();
 
-    const gravity = 0.38;
+    const gravity = 0.36;
     const friction = 0.985;
-    const floorBounce = 0.68;
+    const floorBounce = 0.7;
 
     // Helper: Draw rounded hexagon
     const drawRoundedHexagon = (c, r, cr) => {
@@ -183,8 +227,8 @@ export const GravityShapesCanvas = () => {
       c.fill();
     };
 
-    // Helper: Draw 4-Petal Clover / Quatrefoil
-    const drawClover = (c, s) => {
+    // Helper: Draw 4-Petal Clover
+    const drawClover = (c, s, baseScale) => {
       const r = s * 0.3;
       const d = s * 0.24;
       c.beginPath();
@@ -192,40 +236,21 @@ export const GravityShapesCanvas = () => {
       c.arc(d, 0, r, 0, Math.PI * 2);
       c.arc(0, d, r, 0, Math.PI * 2);
       c.arc(-d, 0, r, 0, Math.PI * 2);
-      c.roundRect(-d, -d, d * 2, d * 2, 16 * baseScale);
+      c.roundRect(-d, -d, d * 2, d * 2, 16 * (baseScale || 1));
       c.fill();
     };
 
-    // Simulation loop
+    // Physics render loop
     const animate = () => {
-      ctx.clearRect(0, 0, width, height);
+      const w = stateRef.current.width;
+      const h = stateRef.current.height;
+      if (w === 0 || h === 0) return;
 
-      // Draw subtle top outline rings (like in the screenshot)
-      ctx.save();
-      ctx.strokeStyle = palette.line;
-      ctx.lineWidth = 1.2;
-      const topRingR = 26 * baseScale;
-      const topCenter = width * 0.49;
-      [-1, 0, 1].forEach((offset) => {
-        ctx.beginPath();
-        ctx.arc(topCenter + offset * (topRingR * 1.8), 24 * baseScale, topRingR, 0, Math.PI * 2);
-        ctx.stroke();
-      });
-      ctx.restore();
-
-      // Draw subtle baseline floor (like in the screenshot)
-      ctx.save();
-      ctx.strokeStyle = palette.line;
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      ctx.moveTo(0, floorBaseline);
-      ctx.lineTo(width, floorBaseline);
-      ctx.stroke();
-      ctx.restore();
+      ctx.clearRect(0, 0, w, h);
 
       const shapes = stateRef.current.shapes;
 
-      // 1. Move & Wall / Floor Bounds
+      // 1. Move & Canvas Edge Bounds
       shapes.forEach((s) => {
         if (!s.isDragging) {
           s.vy += gravity;
@@ -240,35 +265,35 @@ export const GravityShapesCanvas = () => {
 
           const r = s.hitRadius;
 
-          // Floor baseline
-          if (s.y + r > floorBaseline) {
-            s.y = floorBaseline - r;
+          // Bottom floor
+          if (s.y + r > h) {
+            s.y = h - r;
             s.vy = -s.vy * floorBounce;
             s.vx *= 0.94;
             if (Math.abs(s.vy) < 0.4) s.vy = 0;
           }
 
-          // Ceiling
+          // Top ceiling
           if (s.y - r < 0) {
             s.y = r;
             s.vy = -s.vy * floorBounce;
           }
 
-          // Left Wall
+          // Left wall
           if (s.x - r < 0) {
             s.x = r;
             s.vx = -s.vx * floorBounce;
           }
 
-          // Right Wall
-          if (s.x + r > width) {
-            s.x = width - r;
+          // Right wall
+          if (s.x + r > w) {
+            s.x = w - r;
             s.vx = -s.vx * floorBounce;
           }
         }
       });
 
-      // 2. Object-to-Object Collisions & Dispersion
+      // 2. Object-to-Object Collisions & Momentum Dispersion
       for (let i = 0; i < shapes.length; i++) {
         for (let j = i + 1; j < shapes.length; j++) {
           const s1 = shapes[i];
@@ -306,7 +331,7 @@ export const GravityShapesCanvas = () => {
             if (velAlongNormal < 0) {
               const restitution = 0.82;
               const impulse = -(1 + restitution) * velAlongNormal / (1 / s1.mass + 1 / s2.mass);
-              const dispersionMultiplier = 1.2;
+              const dispersionMultiplier = 1.25;
               const finalImpulse = impulse * dispersionMultiplier;
 
               const ix = finalImpulse * nx;
@@ -328,7 +353,7 @@ export const GravityShapesCanvas = () => {
         }
       }
 
-      // 3. Render exact shapes
+      // 3. Render Shapes
       shapes.forEach((s) => {
         ctx.save();
         ctx.translate(s.x, s.y);
@@ -350,7 +375,7 @@ export const GravityShapesCanvas = () => {
         } else if (s.type === 'hexagon') {
           drawRoundedHexagon(ctx, s.radius, s.cornerRadius);
         } else if (s.type === 'clover') {
-          drawClover(ctx, s.size);
+          drawClover(ctx, s.size, s.baseScale);
         }
 
         ctx.restore();
@@ -427,7 +452,7 @@ export const GravityShapesCanvas = () => {
       }
     };
 
-    window.addEventListener('resize', updateDimensions);
+    window.addEventListener('resize', initOrResizeCanvas);
     canvas.addEventListener('mousedown', handlePointerDown);
     window.addEventListener('mousemove', handlePointerMove);
     window.addEventListener('mouseup', handlePointerUp);
@@ -440,7 +465,7 @@ export const GravityShapesCanvas = () => {
       if (stateRef.current.animationId) {
         cancelAnimationFrame(stateRef.current.animationId);
       }
-      window.removeEventListener('resize', updateDimensions);
+      window.removeEventListener('resize', initOrResizeCanvas);
       canvas.removeEventListener('mousedown', handlePointerDown);
       window.removeEventListener('mousemove', handlePointerMove);
       window.removeEventListener('mouseup', handlePointerUp);
