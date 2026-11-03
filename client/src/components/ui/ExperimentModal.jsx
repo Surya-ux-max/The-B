@@ -77,7 +77,7 @@ export const ExperimentModal = ({ experiment, onClose }) => {
                 Architectural Highlights
               </h4>
               <p className="text-xs text-[var(--color-muted)] leading-relaxed">
-                Designed and built by Tarunika B with end-to-end full stack principles, rigorous type safety, modular component interfaces, and high-performance execution.
+                Designed and built by Zera Shahadiya S with end-to-end full stack principles, rigorous type safety, modular component interfaces, and high-performance execution.
               </p>
             </div>
 

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ArrowUpRight, Sparkles } from 'lucide-react';
+import { portfolioData } from '../../data/portfolioData';
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { personal } = portfolioData;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,8 +17,9 @@ export const Navbar = () => {
   }, []);
 
   const navLinks = [
+    { name: 'About', href: '#bio' },
     { name: 'Experiments', href: '#experiments' },
-    { name: 'Connect', href: 'mailto:tarunika.dev@gmail.com' }
+    { name: 'Connect', href: `mailto:${personal.email}` }
   ];
 
   return (
@@ -68,7 +71,7 @@ export const Navbar = () => {
         {/* Contact CTA & Mobile Toggle */}
         <div className="flex items-center gap-2">
           <a
-            href="mailto:tarunika.dev@gmail.com"
+            href={`mailto:${personal.email}`}
             className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[var(--color-text)] text-white text-xs font-semibold hover:bg-[var(--color-blue)] transition-colors shadow-xs"
           >
             <span>Let's Connect</span>

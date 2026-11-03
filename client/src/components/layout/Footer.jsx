@@ -35,7 +35,7 @@ export const Footer = () => {
               </span>
             </div>
             <h2 className="font-display text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[var(--color-text)] leading-none">
-              TARUNIKA B
+              ZERA SHAHADIYA S
             </h2>
             <p className="mt-3 text-sm text-[var(--color-muted)] max-w-md">
               Full Stack Developer building ideas into reliable systems, reactive applications, and experimental tools.
@@ -112,7 +112,7 @@ export const Footer = () => {
         {/* Copyright */}
         <div className="pt-6 border-t border-[var(--color-beige)]/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[var(--color-muted)]">
           <p>
-            &copy; {new Date().getFullYear()} Tarunika B. All rights reserved.
+            &copy; {new Date().getFullYear()} Zera Shahadiya S. All rights reserved.
           </p>
           <p className="font-mono text-[11px]">
             Designed with Google Labs Design System

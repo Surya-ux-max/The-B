@@ -20,6 +20,45 @@ export const portfolioData = {
     ]
   },
 
+  bio: {
+    badge: "About the Engineer",
+    title: "Architecting systems at the intersection of scale, physics, and interface design.",
+    statement: "I build end-to-end applications where engineering rigor meets creative interactivity. Specializing in resilient cloud backends, reactive web interfaces, and experimental AI prototypes.",
+    currentFocus: "High-throughput distributed systems & browser edge computing",
+    principles: [
+      { id: "01", label: "Performance by Default", desc: "Sub-100ms render targets, lean payloads, and zero layout thrashing." },
+      { id: "02", label: "Zero Fluff Architecture", desc: "Pragmatic service boundaries, resilient fallbacks, and typed schemas." },
+      { id: "03", label: "Physics-Driven Delight", desc: "Tactile web interactions, organic inertia, and intuitive feedback." },
+      { id: "04", label: "Observability First", desc: "Telemetry, distributed tracing, and self-healing deployment pipelines." }
+    ],
+    disciplines: [
+      {
+        id: "interface",
+        title: "Interface & Motion",
+        accent: "#5B95F9",
+        accentBg: "rgba(91, 149, 249, 0.12)",
+        description: "High-performance reactive interfaces, 60 FPS physics animations, Canvas/WebGL rendering, and accessible interaction models.",
+        tags: ["React 19", "Tailwind CSS v4", "Framer Motion", "HTML5 Canvas", "WebGL", "TypeScript"]
+      },
+      {
+        id: "distributed",
+        title: "Distributed Systems & Cloud",
+        accent: "#34A853",
+        accentBg: "rgba(52, 168, 83, 0.12)",
+        description: "Scalable event-driven microservices, ACID-compliant databases, low-latency API gateways, and containerized cloud orchestration.",
+        tags: ["Node.js", "Go", "PostgreSQL", "Redis", "Docker", "REST / GraphQL"]
+      },
+      {
+        id: "ai-edge",
+        title: "AI & Edge Labs",
+        accent: "#FFCE35",
+        accentBg: "rgba(255, 206, 53, 0.18)",
+        description: "Browser-level tensor visualization, semantic vector search, real-time streaming analysis, and WebAssembly execution.",
+        tags: ["FastAPI", "WebAssembly", "TensorFlow.js", "FAISS / Vector DB", "Python"]
+      }
+    ]
+  },
+
   filterCategories: ["All", "Experiments", "Create", "Explore"],
 
   experiments: [
