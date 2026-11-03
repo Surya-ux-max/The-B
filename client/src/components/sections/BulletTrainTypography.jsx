@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 /**
  * BulletTrainTypography
- * Massive edge-to-edge name headline with kinetic bullet-train entry animation.
+ * Balanced, refined headline with kinetic bullet-train entry animation.
  * Sub-headline: "Full Stack Developer" with magenta accent on "Developer".
  */
 export const BulletTrainTypography = () => {
@@ -15,36 +15,36 @@ export const BulletTrainTypography = () => {
   }, []);
 
   return (
-    <div className="relative z-20 flex flex-col items-center justify-center text-center px-2 sm:px-6 select-none pointer-events-none w-full">
+    <div className="relative z-20 flex flex-col items-center justify-center text-center px-4 sm:px-8 select-none pointer-events-none w-full max-w-4xl mx-auto -translate-y-6 sm:-translate-y-10">
 
-      {/* ── Primary name — edge-to-edge ── */}
+      {/* ── Primary name — refined scale ── */}
       <div className="overflow-visible w-full flex items-center justify-center">
         <motion.h1
           key={`name-${cycle}`}
-          initial={{ opacity: 0.05, x: '-80vw', skewX: -18, filter: 'blur(12px)' }}
+          initial={{ opacity: 0.05, x: '-60vw', skewX: -14, filter: 'blur(10px)' }}
           animate={{ opacity: 1, x: 0, skewX: 0, filter: 'blur(0px)' }}
-          transition={{ duration: 0.72, ease: [0.16, 1, 0.3, 1] }}
-          className="font-display font-black leading-[0.88] whitespace-nowrap tracking-tighter drop-shadow-sm"
-          style={{ fontSize: 'clamp(2.8rem, 13.5vw, 13rem)', color: '#111318' }}
+          transition={{ duration: 0.68, ease: [0.16, 1, 0.3, 1] }}
+          className="font-display font-black leading-[0.95] whitespace-nowrap tracking-tight drop-shadow-xs"
+          style={{ fontSize: 'clamp(2.2rem, 6.2vw, 5.25rem)', color: '#111318' }}
         >
-          Tarunika B
+          Zera Shahadiya S
         </motion.h1>
       </div>
 
       {/* ── Sub-headline — Full Stack Developer ── */}
-      <div className="overflow-visible w-full mt-2 sm:mt-4">
+      <div className="overflow-visible w-full mt-2 sm:mt-3.5">
         <motion.div
           key={`role-${cycle}`}
-          initial={{ opacity: 0.05, x: '80vw', skewX: 18, filter: 'blur(12px)' }}
+          initial={{ opacity: 0.05, x: '60vw', skewX: 14, filter: 'blur(10px)' }}
           animate={{ opacity: 1, x: 0, skewX: 0, filter: 'blur(0px)' }}
-          transition={{ duration: 0.78, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 md:gap-6 font-display font-black tracking-tight leading-none"
-          style={{ fontSize: 'clamp(1.4rem, 5.5vw, 5.5rem)' }}
+          transition={{ duration: 0.72, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 font-display font-bold tracking-normal leading-none"
+          style={{ fontSize: 'clamp(1.05rem, 2.4vw, 2.15rem)' }}
         >
           <span style={{ color: '#111318' }}>Full Stack</span>
           <span className="relative inline-block" style={{ color: '#C2185B' }}>
             Developer
-            <span className="absolute -bottom-1 left-0 right-0 h-1.5 sm:h-2 rounded-full bg-[#C2185B]/20" />
+            <span className="absolute -bottom-1 left-0 right-0 h-1 sm:h-1.5 rounded-full bg-[#C2185B]/20" />
           </span>
         </motion.div>
       </div>

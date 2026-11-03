@@ -32,7 +32,7 @@ export const Navbar = () => {
         <a
           href="#"
           className="flex items-center gap-2.5 group cursor-pointer"
-          aria-label="Tarunika B — Full Stack Developer"
+          aria-label="Zera Shahadiya S — Full Stack Developer"
         >
           {/* 4-color Google Labs inspired dot cluster */}
           <div className="flex items-center gap-1">
@@ -44,7 +44,7 @@ export const Navbar = () => {
 
           <div className="flex items-center gap-2">
             <span className="font-display font-bold text-base text-[var(--color-text)] tracking-tight">
-              Tarunika B
+              Zera Shahadiya S
             </span>
             <span className="hidden sm:inline-block text-[10px] font-mono font-medium uppercase px-2 py-0.5 rounded-full bg-[#E8DED2]/50 text-[var(--color-muted)]">
               Full Stack Dev

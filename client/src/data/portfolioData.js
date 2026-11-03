@@ -1,6 +1,6 @@
 export const portfolioData = {
   personal: {
-    name: "Tarunika B",
+    name: "Zera Shahadiya S",
     role: "Full Stack Developer",
     status: "Available for Full Stack Engineering & Innovative Product Roles",
     badge: "Labs 2025 Edition",
